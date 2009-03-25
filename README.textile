@@ -1,0 +1,3 @@
+h1. Euler.hs
+
+Project Euler, in haskell. To teach myself haskell, and exercise my brain.
