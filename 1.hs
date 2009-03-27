@@ -8,7 +8,6 @@ div_5 x = (mod x 5) == 0
 
 sum_first_1k x = sum (takeWhile (<= 1000) x)
 
-
 --  sum multiples of 3, and add multiples of 5 that are not also
 --  multiples of 3
 threes1 = [x*3 | x <- [1..], div_3 x]
@@ -42,4 +41,3 @@ main = do
          --using the iterate function
          print (sum_first_1k threes3) + (sum_first_1k fives3)
          --just for fun:
-
