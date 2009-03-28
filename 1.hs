@@ -16,28 +16,31 @@ fives1  = [x*5 | x <- [1..], (div_5 x) == True && (div_3 x) == False]
 
 --using addition instead of multiplication
 threes2 = 3 : [ x+3 | x <- threes2]
-fives2  = 5 : [ x+5 | x <- fives2, (div_3 x+5) == False]
+fives2 = 5 : [ if div_3 x then x+10 else x+5 | x <- fives2 ]
 
+-- same as above, but via map and pattern-matching
+next x | div_3 x   = x+10 -- if x is a mutiple of 3, go to the next one
+       | otherwise = x+5
+fives2b  = 5 : [ x | x <- map next fives2b]
 
 -- using the iterate function instead of list comprehensions
-threes3 = iterate (+3) 0
-fives3 = iterate (+5) 0
+threes3 = (iterate (+3) 0)
+fives3  = (iterate (+5) 0)
 
---could you calculate the fibonacci sequence like this:
---fib = [0 : 1 : a+b | ((first fib),  (first . rest fib))]
---looks like I need to use fibs and (tail fibs), at least. Does this work because the
---plus function takes the first element of a list? Probably a shortcut for (head fidbs) and (head tail fibs)
---
+--Just for fun:
+fibs = 0 : 1 : [a + b| (a, b) <- zip fibs (tail fibs)]
 
 main = do
          --brute-force
          --  check every number from 3 to 1000
-         print sum . filter (\x -> (div_3 x) || (div_5 x)) [3..1000]
+         print (sum (filter (\x -> (div_3 x) || (div_5 x)) [3..1000]))
          --smarter: generate list by multiplication
          --  i.e., 1,2,3 -> 3,6,9
-         print (sum_first_1k threes1) + (sum_first_1k fives1)
+         print ((sum_first_1k threes1) + (sum_first_1k fives1))
          --using addition
-         print (sum_first_1k threes2) + (sum_first_1k fives2)
+         print ((sum_first_1k threes2) + (sum_first_1k fives2))
+         print ((sum_first_1k threes2) + (sum_first_1k fives2b))
          --using the iterate function
-         print (sum_first_1k threes3) + (sum_first_1k fives3)
+         print ((sum_first_1k threes3) + (sum_first_1k fives3))
          --just for fun:
+         print (take 10 fibs)
