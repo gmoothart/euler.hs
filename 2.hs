@@ -38,6 +38,20 @@ evens x sum | (even x)   = x + sum
 fibs2 :: [Integer]
 fibs2 =  2 : 8 : [ a + 4*b | (a,b) <- zip fibs2 (tail fibs2)]
 
+--------------------------------------------------------------------------------
+--
+-- Smarter still: investigating the method based on matrix multiplication
+-- and the golden-ratio method. Many thanks to:
+-- http://github.com/raganwald/homoiconic/blob/master/2008-12-12/fibonacci.md
+-- http://expertvoices.nsdl.org/cornell-cs322/2008/03/25/sum-of-fibonacci-numbers/200/
+-- http://www.johndcook.com/blog/2008/04/23/fibonacci-numbers-at-work/
+--
+-- Is there a matrix for the even fibonacci numbers? Where would the (4*) fit?
+--   No, there isn't a straightforward matrix-multiplication answer. BUT, we can
+--   define our own operator which behaves correctly! I think?
+--
+--------------------------------------------------------------------------------
+
 
 
 main = do
