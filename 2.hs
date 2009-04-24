@@ -52,6 +52,31 @@ fibs2 =  2 : 8 : [ a + 4*b | (a,b) <- zip fibs2 (tail fibs2)]
 --
 --------------------------------------------------------------------------------
 
+-- Ok, this won't work. I need to implement everything in Num????
+-- Is there another way to overload (*)?
+-- see here: http://en.wikibooks.org/wiki/Haskell/Advanced_type_classes
+newtype Fiblist = Fiblist (Integer, Integer, Integer)
+toFiblist               :: (Integer, Integer, Integer) -> Fiblist 
+toFiblist x             = Fiblist x
+fromFiblist             :: Fiblist -> (Integer, Integer, Integer)
+fromFiblist (Fiblist x) = x 
+
+fibTimes      :: Fiblist -> Fiblist -> Fiblist
+fibTimes x y  = Fiblist (2,1,0)
+
+fibPlus      :: Fiblist -> Fiblist -> Fiblist
+fibPlus x y  = Fiblist (3,2,1)
+
+instance Num Fiblist where
+  x * y  = x `fibTimes` y
+  x + y  = x `fibPlus` y
+
+instance Eq Fiblist where
+  x == y = (fromFiblist x) == (fromFiblist y)
+
+instance Show Fiblist where
+  show x  = show (fromFiblist x)
+
 
 
 main = do
