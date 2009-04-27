@@ -52,30 +52,31 @@ fibs2 =  2 : 8 : [ a + 4*b | (a,b) <- zip fibs2 (tail fibs2)]
 --
 --------------------------------------------------------------------------------
 
--- Ok, this won't work. I need to implement everything in Num????
--- Is there another way to overload (*)?
--- see here: http://en.wikibooks.org/wiki/Haskell/Advanced_type_classes
-newtype Fiblist = Fiblist (Integer, Integer, Integer)
-toFiblist               :: (Integer, Integer, Integer) -> Fiblist 
-toFiblist x             = Fiblist x
-fromFiblist             :: Fiblist -> (Integer, Integer, Integer)
-fromFiblist (Fiblist x) = x 
+base = (8,2,0)
+m = (4,1,0)
 
-fibTimes      :: Fiblist -> Fiblist -> Fiblist
-fibTimes x y  = Fiblist (2,1,0)
 
-fibPlus      :: Fiblist -> Fiblist -> Fiblist
-fibPlus x y  = Fiblist (3,2,1)
+--this can be faster...
+fibPow (a, b, c) exp 
+  | exp == 1    = (a, b, c)
+  | otherwise   = (a, b, c) `fibProd` (fibPow (a, b, c) exp-1)
 
-instance Num Fiblist where
-  x * y  = x `fibTimes` y
-  x + y  = x `fibPlus` y
+fibAdd (a1, a2, a3) (b1, b2, b3) = (a1+b1, a2+b2, a3+b3)
 
-instance Eq Fiblist where
-  x == y = (fromFiblist x) == (fromFiblist y)
+fibProd (a1, a2, a3) (b1, b2, b3) = 
+  let 
+  in
+    (a1*b1 + a2*b2, a1*b2 + a2*b3, a2*b3 + a3*b3)
 
-instance Show Fiblist where
-  show x  = show (fromFiblist x)
+fibSum base n 
+  | n == 0    = base
+  | n == 1    = base
+  | odd n     = let s = fibSum base (n-1)/2
+                    t = s `fibProd` (base `fibPow` (n-1)/2) --this can be optimized
+                in s + t + (base `fibPow` n) --this can be optimized
+  | even n    = let s = fibSum base n/2
+                    t = s `fibSum` (base `fibPow` n/2)
+                in s + t
 
 
 
