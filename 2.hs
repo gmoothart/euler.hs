@@ -52,31 +52,45 @@ fibs2 =  2 : 8 : [ a + 4*b | (a,b) <- zip fibs2 (tail fibs2)]
 --
 --------------------------------------------------------------------------------
 
-base = (8,2,0)
+type Fiblist = (Integer, Integer, Integer)
+
+i = (1,0,1)
+b = (8,2,0)
 m = (4,1,0)
 
+first           :: Fiblist -> Integer
+first (a, b, c) = a
+
+(.+)                           :: Fiblist -> Fiblist -> Fiblist
+(.+) (a1, a2, a3) (b1, b2, b3) = (a1+b1, a2+b2, a3+b3)
+
+(.*)                           :: Fiblist -> Fiblist -> Fiblist
+(.*) (a1, a2, a3) (b1, b2, b3) = (a1*b1 + a2*b2, a1*b2 + a2*b3, a2*b3 + a3*b3)
 
 --this can be faster...
-fibPow (a, b, c) exp 
+(.^) :: (Integral a) => Fiblist -> a -> Fiblist
+(.^) (a, b, c) exp 
   | exp == 1    = (a, b, c)
-  | otherwise   = (a, b, c) `fibProd` (fibPow (a, b, c) exp-1)
+  | otherwise   = (a, b, c) .* ((a, b, c) .^ exp-1)
 
-fibAdd (a1, a2, a3) (b1, b2, b3) = (a1+b1, a2+b2, a3+b3)
 
-fibProd (a1, a2, a3) (b1, b2, b3) = 
-  let 
-  in
-    (a1*b1 + a2*b2, a1*b2 + a2*b3, a2*b3 + a3*b3)
+-- top-level, bootstrapping function
+fibSum        :: (Integral a) => a -> Integer
+fibSum 0      = 0
+fibSum 1      = 2
+fibSum n      = first (b .* (fibSum' n-2))
 
-fibSum base n 
-  | n == 0    = base
-  | n == 1    = base
-  | odd n     = let s = fibSum base (n-1)/2
-                    t = s `fibProd` (base `fibPow` (n-1)/2) --this can be optimized
-                in s + t + (base `fibPow` n) --this can be optimized
-  | even n    = let s = fibSum base n/2
-                    t = s `fibSum` (base `fibPow` n/2)
-                in s + t
+--recursive function. Does the heavy lifting
+fibSum'       :: (Integral a) => a -> Fiblist
+fibSum' n
+  | n == 0    = i
+  | odd n     = let half_n = n/2 :: RealFrac
+                    s = fibSum' (ceiling half_n)
+                    t = m .^ (floor half_n) --this can be optimized
+                in (t .* s) + s --this can be optimized
+  | even n    = let s = fibSum' ((n `div` 2) - 1)
+                    t = m .^ (m `div` 2)
+                in (t .* s) + s + (m .^ n)
 
 
 
