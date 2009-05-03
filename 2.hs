@@ -65,33 +65,32 @@ first (a, b, c) = a
 (.+) (a1, a2, a3) (b1, b2, b3) = (a1+b1, a2+b2, a3+b3)
 
 (.*)                           :: Fiblist -> Fiblist -> Fiblist
-(.*) (a1, a2, a3) (b1, b2, b3) = (a1*b1 + a2*b2, a1*b2 + a2*b3, a2*b3 + a3*b3)
+(.*) (a1, a2, a3) (b1, b2, b3) = (a1*b1 + a2*b2, a1*b2 + a2*b3, a2*b2 + a3*b3)
 
 --this can be faster...
 (.^) :: (Integral a) => Fiblist -> a -> Fiblist
 (.^) (a, b, c) exp 
   | exp == 1    = (a, b, c)
-  | otherwise   = (a, b, c) .* ((a, b, c) .^ exp-1)
+  | otherwise   = (a, b, c) .* ((a, b, c) .^ (exp-1))
 
 
 -- top-level, bootstrapping function
 fibSum        :: (Integral a) => a -> Integer
 fibSum 0      = 0
 fibSum 1      = 2
-fibSum n      = first (b .* (fibSum' n-2))
+fibSum n      = first (b .* (fibSum' (n-2)))
 
 --recursive function. Does the heavy lifting
+--  this does what I think it should... but doesn't work!
 fibSum'       :: (Integral a) => a -> Fiblist
 fibSum' n
   | n == 0    = i
-  | odd n     = let half_n = n/2 :: RealFrac
-                    s = fibSum' (ceiling half_n)
-                    t = m .^ (floor half_n) --this can be optimized
-                in (t .* s) + s --this can be optimized
+  | odd n     = let s = fibSum' ( (n-1) `div` 2 )
+                    t = m .^ ( (n+1) `div` 2 ) --this can be optimized
+                in (t .* s) .+ s --this can be optimized
   | even n    = let s = fibSum' ((n `div` 2) - 1)
-                    t = m .^ (m `div` 2)
-                in (t .* s) + s + (m .^ n)
-
+                    t = m .^ (n `div` 2)
+                in (t .* s) .+ s .+ (m .^ n)
 
 
 main = do
