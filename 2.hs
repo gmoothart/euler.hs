@@ -88,8 +88,8 @@ fibSum n      = first (b .* (fibSum' (n-2))) + 2
 fibSum'       :: (Integral a) => a -> Fiblist
 fibSum' n
   | n == 0    = i
-  | odd n     = let s = fibSum' ( (n-1) `div` 2 )
-                    t = m .^ ( (n+1) `div` 2 ) --this can be optimized
+  | odd n     = let s = fibSum' (floor (fromIntegral n/2))
+                    t = m .^ (ceiling (fromIntegral n/2)) --this can be optimized
                 in (t .* s) .+ s --this can be optimized
   | even n    = let s = fibSum' ((n `div` 2) - 1)
                     t = m .^ (n `div` 2)
