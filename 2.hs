@@ -49,10 +49,6 @@ fibs2 =  2 : 8 : [ a + 4*b | (a,b) <- zip fibs2 (tail fibs2)]
 -- TODO:
 -- 1) memoize (.*), or otherwise optimize
 -- 2) find out how to profile the implementations, for speed
--- 3) find out how to use ceiling, floor w/out type errors. Why doesn't this compile:
---      test  :: Integer -> Integer --test  :: (Integral a) a -> a
---      test n = ceiling (n/2)
--- ?
 -- 4) write-up as a blog post
 --------------------------------------------------------------------------------
 
