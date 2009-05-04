@@ -46,10 +46,14 @@ fibs2 =  2 : 8 : [ a + 4*b | (a,b) <- zip fibs2 (tail fibs2)]
 -- http://expertvoices.nsdl.org/cornell-cs322/2008/03/25/sum-of-fibonacci-numbers/200/
 -- http://www.johndcook.com/blog/2008/04/23/fibonacci-numbers-at-work/
 --
--- Is there a matrix for the even fibonacci numbers? Where would the (4*) fit?
---   No, there isn't a straightforward matrix-multiplication answer. BUT, we can
---   define our own operator which behaves correctly! I think?
---
+-- TODO:
+-- 1) memoize (.*), or otherwise optimize
+-- 2) find out how to profile the implementations, for speed
+-- 3) find out how to use ceiling, floor w/out type errors. Why doesn't this compile:
+--      test  :: Integer -> Integer --test  :: (Integral a) a -> a
+--      test n = ceiling (n/2)
+-- ?
+-- 4) write-up as a blog post
 --------------------------------------------------------------------------------
 
 type Fiblist = (Integer, Integer, Integer)
@@ -78,10 +82,9 @@ first (a, b, c) = a
 fibSum        :: (Integral a) => a -> Integer
 fibSum 0      = 0
 fibSum 1      = 2
-fibSum n      = first (b .* (fibSum' (n-2)))
+fibSum n      = first (b .* (fibSum' (n-2))) + 2
 
 --recursive function. Does the heavy lifting
---  this does what I think it should... but doesn't work!
 fibSum'       :: (Integral a) => a -> Fiblist
 fibSum' n
   | n == 0    = i
@@ -102,3 +105,5 @@ main = do
   putStrLn "*** Smarter ***"
   print (take 10 fibs2)
   print (sum (takeWhile (<=top) fibs2))
+  putStrLn "*** Genius ***"
+  print (fibSum 11)
