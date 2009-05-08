@@ -52,10 +52,8 @@ fibs2 =  2 : 8 : [ a + 4*b | (a,b) <- zip fibs2 (tail fibs2)]
 
 type Fiblist = (Integer, Integer, Integer)
 
--- For performance reasons, the fibSum' function must return both 
--- the sum up to n and m^n. This prevents wasting a lot of time calculating
--- the same powers of n repeatedly.
--- This data type wraps the double-return value.
+
+-- This data type wraps the double-return value needed by fibSum'
 data PowerSum = PowerSum {
   curr_pow :: Fiblist,
   curr_sum :: Fiblist
@@ -82,6 +80,10 @@ fibSum n      = let sum_list = curr_sum (fibSum' (n-2))
                 in  first (b .* sum_list) + 2 
 
 --recursive function. Does the heavy lifting
+-- For performance reasons, the fibSum' function must return both 
+-- the sum up to n and m^n. Although this complicates bookkeeping and
+-- readability, it prevents wasting a lot of time calculating the same 
+-- powers of n repeatedly.
 fibSum'       :: (Integral a) => a -> PowerSum
 fibSum' n
   | n == 0    = PowerSum i i
@@ -89,7 +91,8 @@ fibSum' n
                     s = (curr_sum ps) -- sum as of floor(n/2) 
                     p = (curr_pow ps) -- m ^ floor(n/2)
                     t = p .* m        -- m ^ ceil(n/2)
-                in PowerSum (t .* p)  ((t .* s) .+ s)
+                    m_exp_n = t .* p  -- m ^ n
+                in PowerSum m_exp_n  ((t .* s) .+ s)
   | even n    = let ps = fibSum' ((n `div` 2) - 1)
                     s = (curr_sum ps) -- sum as of n/2 - 1
                     p = (curr_pow ps) -- m ^ (n/2 - 1)
