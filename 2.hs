@@ -84,6 +84,9 @@ fibSum n      = let sum_list = curr_sum (fibSum' (n-2))
 -- the sum up to n and m^n. Although this complicates bookkeeping and
 -- readability, it prevents wasting a lot of time calculating the same 
 -- powers of n repeatedly.
+--
+-- TODO: I think this can be made tail-recursive, for even better
+--       performance
 fibSum'       :: (Integral a) => a -> PowerSum
 fibSum' n
   | n == 0    = PowerSum i i
