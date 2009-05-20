@@ -5,6 +5,8 @@
  -
  - -}
 
+import System.CPUTime (getCPUTime)
+
 top = 4000000
 
 -------------------------------------------------------------------------------
@@ -115,3 +117,15 @@ main = do
   print (sum (takeWhile (<=top) fibs2))
   putStrLn "*** Genius ***"
   print (fibSum 11)
+
+  putStrLn "*** Profiling Smarter ***"
+  start <- getCPUTime
+  print (sum (take 10000 fibs2))
+  end <- getCPUTime
+  print (end - start)
+
+  putStrLn "*** Profiling Genius ***"
+  start2 <- getCPUTime
+  print (fibSum 10000)
+  end2 <- getCPUTime
+  print (end2 - start2)
