@@ -17,11 +17,14 @@ all_primes = 2:3:primes'
 
 -- could we re-write this using fold?
 lpf :: Integer -> [Integer] -> Integer
-lpf n primes 
-  | p == n             = p
-  | n `mod` p == 0     = lpf (n `div` p) (tail primes)
-  | otherwise          = lpf n     (tail primes)
-  where p = (head primes)
+lpf n primes = lpf' n primes 0
+  where lpf' :: Integer -> [Integer] -> Integer -> Integer
+        lpf' n primes max_so_far
+          | p == n             = p
+          | p > n              = max_so_far
+          | n `mod` p == 0     = lpf' (n `div` p) (tail primes) p
+          | otherwise          = lpf' n (tail primes) max_so_far
+          where p = (head primes)
 
 main = do
   print (lpf n all_primes)
