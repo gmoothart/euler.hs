@@ -49,4 +49,8 @@ asInt_either' xs       = foldl' step_either (North 0) xs
 --
 -- Concat
 --
+myConcat  :: [[a]] -> [a]
+myConcat (x:xs)  = foldl (++) x xs
+
+
 
