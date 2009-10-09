@@ -21,4 +21,4 @@ f x =
                          else f x
   | otherwise        = f (x-1)
 
-any [999*999..100*100] \x -> (isPalindrome x) && (isDivisible x)
+any (\x -> isPalindrome x && isDivisible x) [999*999..100*100] 
